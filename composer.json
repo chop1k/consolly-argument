@@ -1,0 +1,23 @@
+{
+  "name": "consolly/argument",
+  "description": "Package for working with console arguments",
+  "minimum-stability": "dev",
+  "type": "library",
+  "keywords": ["consolly", "argument", "console"],
+  "license": "MIT",
+  "version": "1.0.0",
+  "authors": [
+    {
+      "name": "chop1k",
+      "email": "fakeshopendesu@gmail.com"
+    }
+  ],
+  "require": {
+    "php": "^7.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "Consolly\\Argument\\": "src/"
+    }
+  }
+}
