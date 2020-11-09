@@ -7,7 +7,7 @@ class Argument
     public const Option = 100;
     public const EqualSeparatedOption = 101;
     public const Value = 200;
-    public const Command = 400;
+    public const Command = 300;
 
     protected string $name;
 
@@ -130,6 +130,46 @@ class Argument
         return $this->value;
     }
 
+    public static function parse(string $argument): Argument
+    {
+        $arg = new Argument();
+
+        $arg->setPosition(null);
+
+        if (self::isOption($argument))
+        {
+            $arg->setAbbreviated(self::isAbbreviation($argument));
+
+            $explodedArg = explode("=", $argument);
+
+            if (count($explodedArg) >= 2)
+            {
+                $arg->setType(self::EqualSeparatedOption);
+
+                $arg->setName(trim($explodedArg[0], '-'));
+                $arg->setValue(trim($explodedArg[1], "'\""));
+            }
+            else
+            {
+                $arg->setType(self::Option);
+
+                $arg->setName(trim($argument,'-'));
+            }
+        }
+        elseif (self::isValue($argument))
+        {
+            $arg->setType(self::Value);
+
+            $arg->setValue(trim($argument, '"\''));
+        }
+        else
+        {
+            $arg->setType(self::Command);
+        }
+
+        return $arg;
+    }
+
     public static function isOption(string $option): bool
     {
         return strpos($option, "-") === 0 || strpos($option, "--") === 0;
@@ -148,6 +188,11 @@ class Argument
     public static function isValue(string $value): bool
     {
         $len = strlen($value)-1;
+
+        if ($len <= 0)
+        {
+            return false;
+        }
 
         return ($value[0] === '"' && $value[$len] === '"')
             || ($value[0] === "'" && $value[$len] === "'");
