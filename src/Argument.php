@@ -9,6 +9,24 @@ class Argument
     public const Value = 200;
     public const Command = 300;
 
+    protected string $arg;
+
+    /**
+     * @return string
+     */
+    public function getArg(): string
+    {
+        return $this->arg;
+    }
+
+    /**
+     * @param string $arg
+     */
+    public function setArg(string $arg): void
+    {
+        $this->arg = $arg;
+    }
+
     protected string $name;
 
     /**
@@ -134,6 +152,7 @@ class Argument
     {
         $arg = new Argument();
 
+        $arg->setArg($argument);
         $arg->setPosition(null);
 
         if (self::isOption($argument))
@@ -165,9 +184,42 @@ class Argument
         else
         {
             $arg->setType(self::Command);
+
+            $arg->setValue($argument);
         }
 
         return $arg;
+    }
+
+    public static function toAbbreviations(string $option, bool $prefix = false): array
+    {
+        $options = str_split(trim($option, '-'));
+
+        if ($prefix)
+        {
+            array_walk($options, function (&$item) {
+                $item = "-$item";
+            });
+        }
+
+        return $options;
+    }
+
+    public static function toOption(string $name): string
+    {
+        return sprintf('--%s', trim($name, "\"'-"));
+    }
+
+    public static function toAbbreviation(string $name): string
+    {
+        $name = trim($name, "\"'-");
+
+        if (strlen($name) < 1)
+        {
+            return false;
+        }
+
+        return sprintf('-%s', $name[0]);
     }
 
     public static function isOption(string $option): bool
