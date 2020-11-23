@@ -1,7 +1,7 @@
 {
   "name": "consolly/argument",
   "description": "Package for working with console arguments",
-  "minimum-stability": "dev",
+  "minimum-stability": "stable",
   "type": "library",
   "keywords": ["consolly", "argument", "console"],
   "license": "MIT",
